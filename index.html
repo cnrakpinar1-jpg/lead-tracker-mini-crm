@@ -3,96 +3,154 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Lead Tracker — a lightweight personal CRM for freelancers and small agencies." />
   <title>Lead Tracker — Mini CRM</title>
+
+  <!-- Inter font — the standard for modern admin dashboards -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- ============================================================
-       APP HEADER — sticky top bar with branding and global actions
-       ============================================================ -->
+  <!-- ================================================================
+       APP HEADER
+       Sticky top bar. Brand on the left, global actions on the right.
+       ================================================================ -->
   <header class="app-header">
     <div class="header-inner">
+
       <div class="brand">
-        <div class="brand-icon">LT</div>
+        <!-- Logo mark -->
+        <div class="brand-icon" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
         <div>
           <h1 class="brand-name">Lead Tracker</h1>
-          <p class="brand-tagline">Your personal mini CRM</p>
+          <p class="brand-tagline">Personal mini CRM</p>
         </div>
       </div>
+
+      <!-- Secondary actions (export, reset) + primary CTA -->
       <div class="header-actions">
-        <button class="btn btn-ghost btn-sm" id="exportCsvBtn">&#8595; Export CSV</button>
-        <button class="btn btn-ghost btn-sm" id="exportJsonBtn">&#8595; Export JSON</button>
-        <button class="btn btn-danger-ghost btn-sm" id="resetAllBtn">Reset All</button>
-        <button class="btn btn-primary" id="addLeadBtn">+ Add Lead</button>
+        <div class="header-action-group">
+          <button class="btn btn-ghost btn-sm" id="exportCsvBtn" title="Download leads as CSV">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            CSV
+          </button>
+          <button class="btn btn-ghost btn-sm" id="exportJsonBtn" title="Download leads as JSON">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            JSON
+          </button>
+          <button class="btn btn-ghost btn-sm btn-danger-ghost" id="resetAllBtn" title="Delete all leads permanently">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+            Reset
+          </button>
+        </div>
+        <button class="btn btn-primary" id="addLeadBtn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Lead
+        </button>
       </div>
+
     </div>
   </header>
 
-  <!-- ============================================================
-       MAIN CONTENT AREA
-       ============================================================ -->
+
+  <!-- ================================================================
+       MAIN CONTENT
+       ================================================================ -->
   <main class="main-content">
 
-    <!-- DASHBOARD — six summary stat cards -->
-    <section class="dashboard-grid">
+    <!-- DASHBOARD — six live summary cards -->
+    <section class="dashboard-grid" aria-label="Summary statistics">
+
       <div class="stat-card stat-total">
-        <div class="stat-icon">&#128202;</div>
+        <div class="stat-icon-wrap" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>
+        </div>
         <div class="stat-body">
           <div class="stat-label">Total Leads</div>
           <div class="stat-value" id="statTotal">0</div>
         </div>
       </div>
+
       <div class="stat-card stat-new">
-        <div class="stat-icon">&#10024;</div>
+        <div class="stat-icon-wrap" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        </div>
         <div class="stat-body">
           <div class="stat-label">New</div>
           <div class="stat-value" id="statNew">0</div>
         </div>
       </div>
+
       <div class="stat-card stat-proposal">
-        <div class="stat-icon">&#128196;</div>
+        <div class="stat-icon-wrap" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </div>
         <div class="stat-body">
           <div class="stat-label">Proposal Sent</div>
           <div class="stat-value" id="statProposal">0</div>
         </div>
       </div>
+
       <div class="stat-card stat-won">
-        <div class="stat-icon">&#9989;</div>
+        <div class="stat-icon-wrap" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        </div>
         <div class="stat-body">
           <div class="stat-label">Won</div>
           <div class="stat-value" id="statWon">0</div>
         </div>
       </div>
+
       <div class="stat-card stat-lost">
-        <div class="stat-icon">&#10060;</div>
+        <div class="stat-icon-wrap" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+        </div>
         <div class="stat-body">
           <div class="stat-label">Lost</div>
           <div class="stat-value" id="statLost">0</div>
         </div>
       </div>
-      <div class="stat-card stat-value">
-        <div class="stat-icon">&#128176;</div>
+
+      <div class="stat-card stat-pipeline">
+        <div class="stat-icon-wrap" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        </div>
         <div class="stat-body">
           <div class="stat-label">Pipeline Value</div>
-          <div class="stat-value" id="statValue">$0</div>
+          <div class="stat-value stat-value--currency" id="statValue">$0</div>
         </div>
       </div>
+
     </section>
 
+
     <!-- FILTER BAR — search + dropdowns + sort -->
-    <section class="filter-bar">
+    <section class="filter-bar" aria-label="Search and filter leads">
       <div class="search-wrapper">
-        <span class="search-icon">&#128269;</span>
+        <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input
           type="text"
           id="searchInput"
           class="search-input"
-          placeholder="Search by name, company, or email..."
+          placeholder="Search by name, company, or email…"
+          aria-label="Search leads"
+          autocomplete="off"
         />
       </div>
+
       <div class="filter-selects">
-        <select id="filterStatus" class="filter-select">
+        <select id="filterStatus" class="filter-select" aria-label="Filter by status">
           <option value="">All Statuses</option>
           <option>New</option>
           <option>Contacted</option>
@@ -101,7 +159,8 @@
           <option>Won</option>
           <option>Lost</option>
         </select>
-        <select id="filterSource" class="filter-select">
+
+        <select id="filterSource" class="filter-select" aria-label="Filter by source">
           <option value="">All Sources</option>
           <option>Upwork</option>
           <option>Fiverr</option>
@@ -111,128 +170,157 @@
           <option>LinkedIn</option>
           <option>Other</option>
         </select>
-        <select id="filterPriority" class="filter-select">
+
+        <select id="filterPriority" class="filter-select" aria-label="Filter by priority">
           <option value="">All Priorities</option>
           <option>Low</option>
           <option>Medium</option>
           <option>High</option>
         </select>
-        <select id="sortBy" class="filter-select">
+
+        <select id="sortBy" class="filter-select" aria-label="Sort leads">
           <option value="newest">Newest First</option>
           <option value="oldest">Oldest First</option>
-          <option value="value-high">Value: High &#8594; Low</option>
-          <option value="value-low">Value: Low &#8594; High</option>
+          <option value="value-high">Value: High → Low</option>
+          <option value="value-low">Value: Low → High</option>
         </select>
       </div>
     </section>
 
-    <!-- LEAD TABLE SECTION -->
-    <section class="table-section">
+
+    <!-- LEADS TABLE SECTION -->
+    <section class="table-section" aria-label="Leads list">
       <div class="table-header">
-        <h2 class="table-title">
-          Leads <span class="lead-count" id="leadCount">0</span>
-        </h2>
+        <div class="table-header-left">
+          <h2 class="table-title">
+            Leads <span class="lead-count" id="leadCount">0</span>
+          </h2>
+          <!-- JS populates this with "Showing X of Y — Clear filters" when filters are active -->
+          <span class="table-meta" id="tableMeta"></span>
+        </div>
       </div>
-      <!-- JS renders lead rows or empty state here -->
+
+      <!-- JS renders the table or empty state into this div -->
       <div id="leadsContainer"></div>
     </section>
 
   </main>
 
-  <!-- ============================================================
-       MODAL — shared for both Add and Edit lead forms
-       Click backdrop or press Escape to close
-       ============================================================ -->
+
+  <!-- ================================================================
+       MODAL — shared between Add Lead and Edit Lead
+       Clicking the backdrop or pressing Escape closes it.
+       ================================================================ -->
   <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <div class="modal">
+
       <div class="modal-header">
-        <h2 class="modal-title" id="modalTitle">Add New Lead</h2>
-        <button class="modal-close" id="modalClose" aria-label="Close modal">&times;</button>
+        <div class="modal-header-left">
+          <div class="modal-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+          </div>
+          <h2 class="modal-title" id="modalTitle">Add New Lead</h2>
+        </div>
+        <button class="modal-close" id="modalClose" aria-label="Close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
       </div>
 
       <form id="leadForm" class="lead-form" novalidate>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label" for="fullName">Full Name <span class="required">*</span></label>
-            <input type="text" id="fullName" class="form-input" placeholder="Jane Smith" autocomplete="name" />
-            <span class="field-error" id="fullNameError"></span>
+        <!-- ── Section 1: Contact Information ── -->
+        <div class="form-section">
+          <div class="form-section-title">Contact Information</div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="fullName">Full Name <span class="required">*</span></label>
+              <input type="text" id="fullName" class="form-input" placeholder="Jane Smith" autocomplete="name" />
+              <span class="field-error" id="fullNameError"></span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="company">Company Name</label>
+              <input type="text" id="company" class="form-input" placeholder="Acme Corp" autocomplete="organization" />
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label" for="company">Company Name</label>
-            <input type="text" id="company" class="form-input" placeholder="Acme Corp" autocomplete="organization" />
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="email">Email <span class="required">*</span></label>
+              <input type="email" id="email" class="form-input" placeholder="jane@example.com" autocomplete="email" />
+              <span class="field-error" id="emailError"></span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="phone">Phone</label>
+              <input type="tel" id="phone" class="form-input" placeholder="+1 555 000 0000" autocomplete="tel" />
+            </div>
           </div>
         </div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label" for="email">Email <span class="required">*</span></label>
-            <input type="email" id="email" class="form-input" placeholder="jane@example.com" autocomplete="email" />
-            <span class="field-error" id="emailError"></span>
+        <!-- ── Section 2: Lead Details ── -->
+        <div class="form-section">
+          <div class="form-section-title">Lead Details</div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="source">Source <span class="required">*</span></label>
+              <select id="source" class="form-input form-select">
+                <option value="">— Select source —</option>
+                <option>Upwork</option>
+                <option>Fiverr</option>
+                <option>Referral</option>
+                <option>Website</option>
+                <option>Instagram</option>
+                <option>LinkedIn</option>
+                <option>Other</option>
+              </select>
+              <span class="field-error" id="sourceError"></span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="status">Status <span class="required">*</span></label>
+              <select id="status" class="form-input form-select">
+                <option value="">— Select status —</option>
+                <option>New</option>
+                <option>Contacted</option>
+                <option>Qualified</option>
+                <option>Proposal Sent</option>
+                <option>Won</option>
+                <option>Lost</option>
+              </select>
+              <span class="field-error" id="statusError"></span>
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label" for="phone">Phone</label>
-            <input type="tel" id="phone" class="form-input" placeholder="+1 555 000 0000" autocomplete="tel" />
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="priority">Priority <span class="required">*</span></label>
+              <select id="priority" class="form-input form-select">
+                <option value="">— Select priority —</option>
+                <option>Low</option>
+                <option>Medium</option>
+                <option>High</option>
+              </select>
+              <span class="field-error" id="priorityError"></span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="estimatedValue">Estimated Value ($)</label>
+              <input type="number" id="estimatedValue" class="form-input" placeholder="0" min="0" step="1" />
+            </div>
           </div>
         </div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label" for="source">Source <span class="required">*</span></label>
-            <select id="source" class="form-input form-select">
-              <option value="">— Select source —</option>
-              <option>Upwork</option>
-              <option>Fiverr</option>
-              <option>Referral</option>
-              <option>Website</option>
-              <option>Instagram</option>
-              <option>LinkedIn</option>
-              <option>Other</option>
-            </select>
-            <span class="field-error" id="sourceError"></span>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="status">Status <span class="required">*</span></label>
-            <select id="status" class="form-input form-select">
-              <option value="">— Select status —</option>
-              <option>New</option>
-              <option>Contacted</option>
-              <option>Qualified</option>
-              <option>Proposal Sent</option>
-              <option>Won</option>
-              <option>Lost</option>
-            </select>
-            <span class="field-error" id="statusError"></span>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label class="form-label" for="priority">Priority <span class="required">*</span></label>
-            <select id="priority" class="form-input form-select">
-              <option value="">— Select priority —</option>
-              <option>Low</option>
-              <option>Medium</option>
-              <option>High</option>
-            </select>
-            <span class="field-error" id="priorityError"></span>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="estimatedValue">Estimated Value ($)</label>
-            <input type="number" id="estimatedValue" class="form-input" placeholder="0" min="0" step="1" />
-          </div>
-        </div>
-
+        <!-- ── Notes (standalone, full width) ── -->
         <div class="form-group">
           <label class="form-label" for="notes">Notes</label>
           <textarea
             id="notes"
             class="form-input form-textarea"
-            placeholder="Any notes about this lead — timeline, budget, requirements..."
+            placeholder="Timeline, budget, requirements, anything useful…"
             rows="3"
           ></textarea>
         </div>
 
+        <!-- ── Submit / Cancel ── -->
         <div class="form-actions">
           <button type="button" class="btn btn-ghost" id="cancelBtn">Cancel</button>
           <button type="submit" class="btn btn-primary" id="submitBtn">Add Lead</button>
@@ -242,8 +330,9 @@
     </div>
   </div>
 
-  <!-- Toast notification (injected by JS) -->
-  <div id="toastContainer"></div>
+
+  <!-- Toast container — JS injects notifications here -->
+  <div id="toastContainer" aria-live="polite"></div>
 
   <script src="script.js"></script>
 </body>
