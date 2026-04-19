@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lead Tracker — Mini CRM</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ============================================================
+       APP HEADER — sticky top bar with branding and global actions
+       ============================================================ -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-icon">LT</div>
+        <div>
+          <h1 class="brand-name">Lead Tracker</h1>
+          <p class="brand-tagline">Your personal mini CRM</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-ghost btn-sm" id="exportCsvBtn">&#8595; Export CSV</button>
+        <button class="btn btn-ghost btn-sm" id="exportJsonBtn">&#8595; Export JSON</button>
+        <button class="btn btn-danger-ghost btn-sm" id="resetAllBtn">Reset All</button>
+        <button class="btn btn-primary" id="addLeadBtn">+ Add Lead</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       MAIN CONTENT AREA
+       ============================================================ -->
+  <main class="main-content">
+
+    <!-- DASHBOARD — six summary stat cards -->
+    <section class="dashboard-grid">
+      <div class="stat-card stat-total">
+        <div class="stat-icon">&#128202;</div>
+        <div class="stat-body">
+          <div class="stat-label">Total Leads</div>
+          <div class="stat-value" id="statTotal">0</div>
+        </div>
+      </div>
+      <div class="stat-card stat-new">
+        <div class="stat-icon">&#10024;</div>
+        <div class="stat-body">
+          <div class="stat-label">New</div>
+          <div class="stat-value" id="statNew">0</div>
+        </div>
+      </div>
+      <div class="stat-card stat-proposal">
+        <div class="stat-icon">&#128196;</div>
+        <div class="stat-body">
+          <div class="stat-label">Proposal Sent</div>
+          <div class="stat-value" id="statProposal">0</div>
+        </div>
+      </div>
+      <div class="stat-card stat-won">
+        <div class="stat-icon">&#9989;</div>
+        <div class="stat-body">
+          <div class="stat-label">Won</div>
+          <div class="stat-value" id="statWon">0</div>
+        </div>
+      </div>
+      <div class="stat-card stat-lost">
+        <div class="stat-icon">&#10060;</div>
+        <div class="stat-body">
+          <div class="stat-label">Lost</div>
+          <div class="stat-value" id="statLost">0</div>
+        </div>
+      </div>
+      <div class="stat-card stat-value">
+        <div class="stat-icon">&#128176;</div>
+        <div class="stat-body">
+          <div class="stat-label">Pipeline Value</div>
+          <div class="stat-value" id="statValue">$0</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FILTER BAR — search + dropdowns + sort -->
+    <section class="filter-bar">
+      <div class="search-wrapper">
+        <span class="search-icon">&#128269;</span>
+        <input
+          type="text"
+          id="searchInput"
+          class="search-input"
+          placeholder="Search by name, company, or email..."
+        />
+      </div>
+      <div class="filter-selects">
+        <select id="filterStatus" class="filter-select">
+          <option value="">All Statuses</option>
+          <option>New</option>
+          <option>Contacted</option>
+          <option>Qualified</option>
+          <option>Proposal Sent</option>
+          <option>Won</option>
+          <option>Lost</option>
+        </select>
+        <select id="filterSource" class="filter-select">
+          <option value="">All Sources</option>
+          <option>Upwork</option>
+          <option>Fiverr</option>
+          <option>Referral</option>
+          <option>Website</option>
+          <option>Instagram</option>
+          <option>LinkedIn</option>
+          <option>Other</option>
+        </select>
+        <select id="filterPriority" class="filter-select">
+          <option value="">All Priorities</option>
+          <option>Low</option>
+          <option>Medium</option>
+          <option>High</option>
+        </select>
+        <select id="sortBy" class="filter-select">
+          <option value="newest">Newest First</option>
+          <option value="oldest">Oldest First</option>
+          <option value="value-high">Value: High &#8594; Low</option>
+          <option value="value-low">Value: Low &#8594; High</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- LEAD TABLE SECTION -->
+    <section class="table-section">
+      <div class="table-header">
+        <h2 class="table-title">
+          Leads <span class="lead-count" id="leadCount">0</span>
+        </h2>
+      </div>
+      <!-- JS renders lead rows or empty state here -->
+      <div id="leadsContainer"></div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================
+       MODAL — shared for both Add and Edit lead forms
+       Click backdrop or press Escape to close
+       ============================================================ -->
+  <div class="modal-overlay" id="modalOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modalTitle">Add New Lead</h2>
+        <button class="modal-close" id="modalClose" aria-label="Close modal">&times;</button>
+      </div>
+
+      <form id="leadForm" class="lead-form" novalidate>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="fullName">Full Name <span class="required">*</span></label>
+            <input type="text" id="fullName" class="form-input" placeholder="Jane Smith" autocomplete="name" />
+            <span class="field-error" id="fullNameError"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="company">Company Name</label>
+            <input type="text" id="company" class="form-input" placeholder="Acme Corp" autocomplete="organization" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="email">Email <span class="required">*</span></label>
+            <input type="email" id="email" class="form-input" placeholder="jane@example.com" autocomplete="email" />
+            <span class="field-error" id="emailError"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="phone">Phone</label>
+            <input type="tel" id="phone" class="form-input" placeholder="+1 555 000 0000" autocomplete="tel" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="source">Source <span class="required">*</span></label>
+            <select id="source" class="form-input form-select">
+              <option value="">— Select source —</option>
+              <option>Upwork</option>
+              <option>Fiverr</option>
+              <option>Referral</option>
+              <option>Website</option>
+              <option>Instagram</option>
+              <option>LinkedIn</option>
+              <option>Other</option>
+            </select>
+            <span class="field-error" id="sourceError"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="status">Status <span class="required">*</span></label>
+            <select id="status" class="form-input form-select">
+              <option value="">— Select status —</option>
+              <option>New</option>
+              <option>Contacted</option>
+              <option>Qualified</option>
+              <option>Proposal Sent</option>
+              <option>Won</option>
+              <option>Lost</option>
+            </select>
+            <span class="field-error" id="statusError"></span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="priority">Priority <span class="required">*</span></label>
+            <select id="priority" class="form-input form-select">
+              <option value="">— Select priority —</option>
+              <option>Low</option>
+              <option>Medium</option>
+              <option>High</option>
+            </select>
+            <span class="field-error" id="priorityError"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="estimatedValue">Estimated Value ($)</label>
+            <input type="number" id="estimatedValue" class="form-input" placeholder="0" min="0" step="1" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="notes">Notes</label>
+          <textarea
+            id="notes"
+            class="form-input form-textarea"
+            placeholder="Any notes about this lead — timeline, budget, requirements..."
+            rows="3"
+          ></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-ghost" id="cancelBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="submitBtn">Add Lead</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast notification (injected by JS) -->
+  <div id="toastContainer"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
