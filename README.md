@@ -129,3 +129,18 @@ The JavaScript is organized into 17 clearly labeled sections with comments expla
 ---
 
 *Built with plain HTML, CSS, and JavaScript. No frameworks. No build tools. Just open and use.*
+
+---
+
+## GitHub Pages Deployment
+
+This repo is a static HTML/CSS/JavaScript project and `index.html` lives in the repository root, so it is ready for GitHub Pages.
+
+### Deployment Steps
+
+1. Push changes to the `main` branch.
+2. In **Settings > Pages**, enable GitHub Pages for this repository.
+3. Set the source to **GitHub Actions** to use the included `.github/workflows/deploy-pages.yml` workflow.
+4. After the workflow finishes, the live site will be available at:
+
+`https://cnrakpinar1-jpg.github.io/lead-tracker-mini-crm/`
